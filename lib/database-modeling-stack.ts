@@ -1,6 +1,8 @@
-import { Stack, StackProps } from 'aws-cdk-lib';
+import {
+  aws_dynamodb as dynamodb,
+  aws_lambda_nodejs as lambda_nodejs,
+  Stack, StackProps, CfnOutput, RemovalPolicy } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class DatabaseModelingStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -8,9 +10,25 @@ export class DatabaseModelingStack extends Stack {
 
     // The code that defines your stack goes here
 
-    // example resource
-    // const queue = new sqs.Queue(this, 'DatabaseModelingQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
+    const customerTable = new dynamodb.Table(this, 'customerTable', {
+      partitionKey: { 
+        name: 'CustomerId', 
+        type: dynamodb.AttributeType.NUMBER, 
+      },
+      sortKey: {
+        name: 'EmailAddress',
+        type: dynamodb.AttributeType.STRING,
+      },
+      tableName: 'Customer2',
+      readCapacity: 1,
+      writeCapacity: 1,
+      removalPolicy: RemovalPolicy.DESTROY,
+    });
+
+    const customerPopulator = new lambda_nodejs.NodejsFunction(this, 'customerPopulatorLambda', {});
+    customerTable.grantWriteData(customerPopulator);
+
+    new CfnOutput(this, 'customerTableArn', { value: customerTable.tableArn });
+    new CfnOutput(this, 'customerPopulatorLambdaName', { value: customerPopulator.functionName });
   }
 }
