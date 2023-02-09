@@ -27,9 +27,9 @@ export class DatabaseModelingStack extends Stack {
     const orderTable = new dynamodb.Table(this, 'orderTable', {
       partitionKey: {
         name: 'OrderId',
-        type: dynamodb.AttributeType.STRING,
+        type: dynamodb.AttributeType.NUMBER,
       },
-      tableName: 'Order',
+      tableName: 'Order2',
       readCapacity: 1,
       writeCapacity: 1,
       removalPolicy: RemovalPolicy.DESTROY,
