@@ -35,3 +35,30 @@ Install the dependencies
 
 Test that the CDK synthesizes correctly
 `$ cdk ls`
+
+### Dummy Development
+
+Clone the repository
+`$ git clone https://github.com/iuuso/database-modeling-cdk.git`
+
+Create a new branch
+`$ git checkout <branch-name>`
+
+Checkout to the newly created branch
+`$ git branch <branch-name>`
+
+Make your changes, and then stage your changes. First, review what has changed:
+`$ git status`
+
+Add changed files to stage
+`$ git add <filename>`
+
+or:
+
+`$ git add --all`
+
+Make a commit with a message:
+`$ git commit -m "<commit message>"`
+
+Push your branch to Github:
+`$ git push -u origin <branch>`
