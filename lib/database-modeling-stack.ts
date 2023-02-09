@@ -38,6 +38,9 @@ export class DatabaseModelingStack extends Stack {
     const customerPopulator = new lambda_nodejs.NodejsFunction(this, 'customerPopulatorLambda', {});
     customerTable.grantWriteData(customerPopulator);
 
+    const orderPopulator = new lambda_nodejs.NodejsFunction(this, 'orderPopulatorLambda', {});
+    orderTable.grantWriteData(orderPopulator);
+
     const api = new apigateway.LambdaRestApi(this, 'KipuApiGateway', {
       handler: customerPopulator,
     });
@@ -45,6 +48,7 @@ export class DatabaseModelingStack extends Stack {
 
     new CfnOutput(this, 'customerTableArn', { value: customerTable.tableArn });
     new CfnOutput(this, 'customerPopulatorLambdaName', { value: customerPopulator.functionName });
+    new CfnOutput(this, 'orderPopulatorLambdaName', { value: orderPopulator.functionName });
     new CfnOutput(this, 'gateWayUrl', { value: api.url });
   }
 }
