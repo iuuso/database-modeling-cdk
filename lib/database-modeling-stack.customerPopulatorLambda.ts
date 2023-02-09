@@ -2,6 +2,9 @@ import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
 import { Context } from 'aws-lambda';
 
+const firstNames = [ 'Teppo', 'Kalevi', 'Paula', 'Juha', 'Nirnaya' ]
+const lastNames = [ 'Ensimmäinen', 'Toinen', 'Kolmas', 'Iisakka' ,'Tripathi' ]
+
 export const handler = (event: any, context: Context) => {
     console.log(context);
     console.log(event);
@@ -10,21 +13,30 @@ export const handler = (event: any, context: Context) => {
     // the putItem-event into the DynamoDB. We're just pushing some
     // examples into the table in this example.
 
-    const tablename = 'Customer2';
+    const tablename = 'Customer';
     const client = new DynamoDBClient({});
     const dynamo = DynamoDBDocumentClient.from(client);
 
-    const res = dynamo.send(
-        new PutCommand({
-            TableName: tablename,
-            Item: {
-                CustomerId: 1,
-                FirstName: "Kalevi",
-                LastName: 'Ensimmäinen',
-                EmailAddress: 'kalevi.ensimmainen@gmail.com',
-            }
-        })
-    );
+    for (var i=0; i < firstNames.length; i++ ) {
+        populateTablewithDummyData(firstNames[i], lastNames[i], i);
+    }
 
-    return res;
+    function populateTablewithDummyData(firstName: string, lastName: string, customerNumber: number) {
+        const emailAddress = firstName.toLowerCase() + '.' + lastName.toLowerCase() + '@dummymail.com';
+        const res = dynamo.send(
+            new PutCommand({
+                TableName: tablename,
+                Item: {
+                    CustomerId: customerNumber,
+                    FirstName: firstName,
+                    LastName: lastName,
+                    EmailAddress: emailAddress,
+                    OrderId: '',
+                }
+            }),
+        );
+
+        return res;
+    }
+
 }
