@@ -37,10 +37,10 @@ export const handler = (event: any, context: Context) => {
         // Generate a random number between 1 (+ deliveryfee) and 100
         const totalPrice = Math.floor((Math.random() * 100) + (1 + deliveryFee));
         const customerId = Math.floor((Math.random() * 5) + 1);
-        const status = Math.floor((Math.random() * 3) + 0);
+        const statusString = status[Math.floor((Math.random() * 3) + 0)];
 
         // If status is 'Payment Pending' then paymentStatus = false
-        if (status == 3) {
+        if (statusString == 'Payment Pending') {
             paymentStatus = false;
         } else {
             paymentStatus = true;
@@ -48,7 +48,7 @@ export const handler = (event: any, context: Context) => {
 
         const addressId = customerId;
 
-        populateTablewithDummyData(orderId, orderDate, totalPrice, customerId, status, paymentStatus, addressId);
+        populateTablewithDummyData(orderId, orderDate, totalPrice, customerId, statusString, paymentStatus, addressId);
     }
 
     function populateTablewithDummyData(
@@ -56,7 +56,7 @@ export const handler = (event: any, context: Context) => {
         orderDate: string, 
         totalPrice: number, 
         customerId: number, 
-        status: number,
+        status: string,
         paymentStatus: boolean,
         addressId: number,
         ) {
